@@ -1,6 +1,7 @@
 package com.vsh.VolgaStudHack.controllers;
 
 import com.vsh.VolgaStudHack.ProductRepository;
+import com.vsh.VolgaStudHack.exceptions.ProductNotFoundException;
 import com.vsh.VolgaStudHack.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -66,8 +67,8 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Product>> getProduct(@PathVariable("id") String id){
-        return ResponseEntity.ok(this.productRepository.findById(id));
+    public ResponseEntity<Product> getProduct(@PathVariable("id") String id){
+        return ResponseEntity.ok(this.productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id)));
     }
 
     @PutMapping("/{id}")

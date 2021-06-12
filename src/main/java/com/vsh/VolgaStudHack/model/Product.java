@@ -1,5 +1,6 @@
 package com.vsh.VolgaStudHack.model;
 
+import org.bson.BsonBinarySubType;
 import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import com.vsh.VolgaStudHack.ProductType;
@@ -11,13 +12,26 @@ import java.util.Base64;
 @Document
 public class Product {
 
-    public Product(ProductType type, String name, double price, Binary image, String contentType){
+    public Product(ProductType type, String name, double price, Object image, String contentType){
         this.type = type;
         this.name = name;
-        this.image = image;
+        if (image instanceof Binary)
+            this.image = (Binary) image;
+        else
+            this.image = new Binary(BsonBinarySubType.BINARY, Base64.getDecoder().decode(image.toString()));
         this.contentType = contentType;
         this.price = price;
     }
+
+
+   /* public Product(ProductType type, String name, double price, String image, String contentType){
+        this.type = type;
+        this.name = name;
+        this.image = new Binary(BsonBinarySubType.BINARY, Base64.getDecoder().decode(image));
+        this.contentType = contentType;
+        this.price = price;
+    }*/
+
 
     @Id
     private String id;
